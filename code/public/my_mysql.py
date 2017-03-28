@@ -3,7 +3,6 @@ import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
 import time
-
 import MySQLdb
 
 class mysql_class(object):

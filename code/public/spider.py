@@ -15,13 +15,8 @@ from copy import deepcopy
 from random import randint
 
 G_CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-
 G_BASE_DIR = os.path.dirname(G_CURRENT_DIR)
-
 G_OUTPUT_DIR = os.path.join(G_BASE_DIR, 'output')
-
-
-
 
 g_ua_list = [
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36",

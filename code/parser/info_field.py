@@ -1,7 +1,6 @@
 #coding=utf8
 
 import os
-
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -16,14 +15,11 @@ import datetime
 G_CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 G_CODE_DIR = os.path.dirname(G_CURRENT_DIR)
 G_ROOT_DIR = os.path.dirname(G_CODE_DIR)
-
-
 G_LOG_DIR = os.path.join(G_ROOT_DIR, 'logger')
 G_OUT_DIR = os.path.join(G_ROOT_DIR, 'out')
 for dir in [G_LOG_DIR, G_OUT_DIR]:
     if not os.path.exists(dir):
         os.mkdir(dir)
-
 
 sys.path.append(G_ROOT_DIR)
 sys.path.append(os.path.join(G_CODE_DIR, 'public'))

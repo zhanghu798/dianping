@@ -1,8 +1,6 @@
 #coding=utf8
 
 import os
-
-
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -11,16 +9,15 @@ from datetime import datetime
 import pandas as pd
 import gevent
 from gevent import monkey; monkey.patch_all()
-
 from random import randint
 import re
+from bs4 import BeautifulSoup
+from chardet import detect
 
 
 G_CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 G_CODE_DIR = os.path.dirname(G_CURRENT_DIR)
 G_ROOT_DIR = os.path.dirname(G_CODE_DIR)
-
-
 G_LOG_DIR = os.path.join(G_ROOT_DIR, 'log')
 G_OUT_DIR = os.path.join(G_ROOT_DIR, 'out')
 
@@ -28,14 +25,7 @@ G_OUT_DIR = os.path.join(G_ROOT_DIR, 'out')
 for dir in [G_LOG_DIR, G_OUT_DIR]:
     if not os.path.exists(dir):
         os.mkdir(dir)
-#         print 'not dir is exists =@@%s@@' % dir
-#
-#     else:
-#         print 'dir is exists =@@%s@@' % dir
-#
-# raw_input('key...')
 
-# sys.path.append(G_ROOT_DIR)
 sys.path.append(os.path.join(G_CODE_DIR, 'public'))
 sys.path.append(os.path.join(G_CODE_DIR, 'parser'))
 
@@ -64,8 +54,6 @@ except Exception as e:
     from info_field import (search_condition_class, sta_ifno_class)
 
 
-from bs4 import BeautifulSoup
-from chardet import detect
 
 def get_city_list():
     logger = get_logger('get_sta_base_city.log')
@@ -85,9 +73,6 @@ def get_city_list():
             city = a_match.get_text().strip()
 
             search_info_list_list.append(['', city, href])
-
-
-
 
     for terms_open_match in soup.select('.terms-open'):
         dt_match = terms_open_match.find('dt')
@@ -152,10 +137,6 @@ def get_city_list():
 
             continue
 
-
-    exit(0)
-
-
 def get_sta_result():
     logger = get_logger('get_sta_result.log')
     session = get_session(is_use_abuyun_proxy=False, is_use_proxy=False)
@@ -163,7 +144,6 @@ def get_sta_result():
 
     sql = 'select id, project,province,city,search_url from tbl_sta where count is null'
     sql = 'select id, project,province,city,search_url from tbl_sta where id > (select max(id) from tbl_sta  where count is  not  null)'
-
     search_df = pd.read_sql(sql=sql, con=mysql_handle.conn)
 
     for i in range(search_df.shape[0]):
@@ -172,9 +152,7 @@ def get_sta_result():
         project = data_series.project
         city = data_series.city
         search_url = data_series.search_url
-
         logger.info('url=@@%s@@' % search_url)
-
         res = session.get(search_url)
 
         if res.status_code != 200:
@@ -198,8 +176,7 @@ def get_sta_result():
                 block_title_match_list = soup.select(pattern)
                 if block_title_match_list != []:
                     count_str = unicode(block_title_match_list[0])
-                    # print 'count_str=@@%s@@' % count_str
-                    # print 'count_str=@@%r@@' % count_str
+
                     match = re.search(ur'([\d]+)家', count_str)
                     if match != None:
                         count = int(match.group(1))
@@ -211,13 +188,7 @@ def get_sta_result():
                             count = int(match.group(1))
                             # logger.info('count=%d' % int(count))
                             break
-                        # logger.error('match == None')
-                else:
-                    # logger.error("not fnd black title")
-                    # logger.error('key...')
-                    pass
-        # logger.info('count=%d' % count)
-        # raw_input('key...')
+
 
         sql = 'update tbl_sta set count=%d where id = %d' % (count, record_id)
         res = mysql_handle.execute(sql_order=sql, logger=logger, auto_commit=True)
