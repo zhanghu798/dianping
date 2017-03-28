@@ -322,7 +322,7 @@ def get_one_search_page(session, search_url, mysql_handle, logger, project, cate
 
 
 def main_get_shop_info(process_count, unlimited):
-    mysql_handle = mysql_class(host='101.201.113.127', db='dianping')
+    mysql_handle = mysql_class(host='101.201.114.127', db='dianping')
 
     if unlimited:
         sql = """
@@ -520,39 +520,9 @@ if __name__ == '__main__':
         #     # [u'天津', 'http://www.dianping.com/search/category/10/10'],
         #     # [u'宁波', 'http://www.dianping.com/search/category/11/10'],
         #     # [u'扬州', 'http://www.dianping.com/search/category/12/10'],
-        #     [u'福州', 'http://www.dianping.com/search/category/14/10'],
-        #     [u'厦门', 'http://www.dianping.com/search/category/15/10'],
-        #     [u'武汉', 'http://www.dianping.com/search/category/16/10'],
-        #     [u'西安', 'http://www.dianping.com/search/category/17/10'],
-        #     [u'沈阳', 'http://www.dianping.com/search/category/18/10'],
-        #     [u'大连', 'http://www.dianping.com/search/category/19/10'],
-        #     [u'大连', 'http://www.dianping.com/search/category/19/10'],
-        #     [u'青岛', 'http://www.dianping.com/search/category/21/10'],
-        #     [u'济南', 'http://www.dianping.com/search/category/22/10'],
-        #     [u'海口', 'http://www.dianping.com/search/category/23/10'],
-        #     [u'石家庄', 'http://www.dianping.com/search/category/24/10'],
-        #     [u'唐山', 'http://www.dianping.com/search/category/25/10'],
-        #     [u'秦皇岛', 'http://www.dianping.com/search/category/26/10'],
-        #     [u'邯郸', 'http://www.dianping.com/search/category/27/10'],
-        #     [u'邢台', 'http://www.dianping.com/search/category/28/10'],
-        #     [u'保定', 'http://www.dianping.com/search/category/29/10'],
-        #     [u'张家口', 'http://www.dianping.com/search/category/30/10'],
-        #     [u'承德', 'http://www.dianping.com/search/category/31/10'],
-        #     [u'沧州', 'http://www.dianping.com/search/category/32/10'],
-        #     [u'廊坊', 'http://www.dianping.com/search/category/33/10'],
-        #     [u'衡水', 'http://www.dianping.com/search/category/34/10'],
-        #     [u'太原', 'http://www.dianping.com/search/category/35/10'],
-        #     [u'大同', 'http://www.dianping.com/search/category/36/10'],
-        #     [u'阳泉', 'http://www.dianping.com/search/category/37/10']
-        #
-        #
-        #
-        # ]:
-        #     # get_search_condition(search_url=search_url, city=city, project=project)
-        #     pass
 
 
-        mysql_handle = mysql_class(host='101.201.113.127', db='dianping')
+        mysql_handle = mysql_class(host='101.201.114.127', db='dianping')
 
         sql = 'select project, province, city, search_url from tbl_search_url'
         df = pd.read_sql(sql=sql, con=mysql_handle.conn)
