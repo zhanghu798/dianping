@@ -10,8 +10,7 @@ class mysql_class(object):
     """
     自动管理mysql连接.继承自object, 可以自动回收垃圾
     """
-    #def __init__(self, host='115.28.77.226', user='glz007', passwd='glzdb', charset='utf8', db = "zhangh"):
-    def __init__(self, host='127.0.0.1', user='root', passwd='think', db="proxy", charset='utf8', ):
+    def __init__(self, host='127.0.0.1', user='root', passwd='xyz', db="proxy", charset='utf8', ):
         self.conn = MySQLdb.connect(host=host, user=user, passwd=passwd, db=db, charset="utf8")
         self.cursor = self.conn.cursor()
 
