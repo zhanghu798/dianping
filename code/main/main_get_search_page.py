@@ -108,7 +108,7 @@ def parser_search_page(content, logger):
 
 def get_search_url():
     logger = get_logger(os.path.join(G_LOG_DIR, 'get_search_url.log'))
-    mysql_hanle = mysql_class(host='101.201.113.127', db='dianping')
+    mysql_hanle = mysql_class(host='101.201.114.127', db='dianping')
 
     project = u'美食'
     sql = "select id, province, city, search_url  from tbl_sta  where project = '%s' and id > 28717 ;" % project
