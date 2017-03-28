@@ -1,8 +1,5 @@
 #coding=utf8
-
 import os
-
-
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -14,7 +11,6 @@ from gevent import monkey; monkey.patch_all()
 from chardet import detect
 from bs4 import BeautifulSoup
 import re
-
 from random import randint
 
 
@@ -55,8 +51,6 @@ try:
         search_page_class
     )
 
-
-
 except Exception as e:
     from logger import get_logger
     from my_mysql import mysql_class
@@ -90,21 +84,13 @@ def parser_search_page(content, logger):
         return {}
 
     search_url_list = re.findall(ur'http://www.dianping.com/search/category/[\d]+/', content)
-
     search_url_list = list(set(search_url_list))
     
     if len(search_url_list) != 1:
         logger.error('len(search_url_list)=%d' % len(search_url_list))
-        
-    
         return {}
     
     return {'city': city, 'search_url': search_url_list[0].strip('/')}
-
-
-
-
-
 
 def get_search_url():
     logger = get_logger(os.path.join(G_LOG_DIR, 'get_search_url.log'))
@@ -114,9 +100,7 @@ def get_search_url():
     sql = "select id, province, city, search_url  from tbl_sta  where project = '%s' and id > 28717 ;" % project
 
     search_df = pd.read_sql(sql=sql, con=mysql_hanle.conn)
-
     session = get_session(is_use_abuyun_proxy=True)
-
     for i in range(search_df.shape[0]):
         search_url_handle = search_page_class()
         data_series = search_df.iloc[i, :]
@@ -133,14 +117,7 @@ def get_search_url():
 
         if res == None:
             logger.error('res==None')
-            # logger.info('key...')
-            # raw_input('key...')
-
             continue
-
-
-        # with open('search_url.html', 'w') as f:
-        #     f.write(res.content)
 
         parser_dict = parser_search_page(content=res.content, logger=logger)
         if parser_dict == {}:
@@ -154,9 +131,7 @@ def get_search_url():
             # raw_input('key...')
             continue
 
-
         search_url_handle.search_url = parser_dict['search_url']
-
         search_url_handle.storn(mysql_handle=mysql_hanle, logger=logger)
 
 

@@ -1,7 +1,6 @@
 #coding=utf8
 
 import os
-
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -14,13 +13,11 @@ G_CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 G_CODE_DIR = os.path.dirname(G_CURRENT_DIR)
 G_ROOT_DIR = os.path.dirname(G_CODE_DIR)
 
-
 G_LOG_DIR = os.path.join(G_ROOT_DIR, 'logger')
 G_OUT_DIR = os.path.join(G_ROOT_DIR, 'out')
 for dir in [G_LOG_DIR, G_OUT_DIR]:
     if not os.path.exists(dir):
         os.mkdir(dir)
-
 
 sys.path.append(G_ROOT_DIR)
 sys.path.append(os.path.join(G_CODE_DIR, 'public'))
@@ -37,7 +34,6 @@ except Exception as e:
     from my_mysql import mysql_class
     from spider import get_session
     from spider import download_use_session
-
 
 from info_field import shop_info_class
 
@@ -205,14 +201,6 @@ def parse_shop_list(buf, logger):
         shop_url_match = re.search('href="(/shop/.*?)"', shop_html)
         if shop_url_match == None:
             continue
-        # logger.info('test')
-
-
-
-
-        # shop_url = shop_url_match.group(1).strip()
-        # shop_url = 'https://www.dianping.com/' + shop_url.strip('/')
-        # logger.info('shop_url=@@%s@@' % shop_url)
 
         copy_shop_html = re.sub(ur'<[/\w]*?>', '', shop_html)
         for replace_str in [u'<b>', u'</b>', u'</span>']:
@@ -275,18 +263,7 @@ def parse_shop_list(buf, logger):
     is_next = False
     if buf.find(u'title="下一页"') >= 0:
         is_next = True
-
-
-        # logger.info(u"下一页")
-
     return shop_info_handle_list, is_next
-        #
-        # logger.info('*' * 100)
-        # logger.info('raw_input')
-        # raw_input('key...')
-
-    # logger.info('shop_count=%d' % len(shop_info_handle_list))
-
 
 def parse_shop_comment(buf, curr_page, logger):
     # buf = str(buf)

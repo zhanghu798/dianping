@@ -1,11 +1,18 @@
 #coding=utf8
-import urllib
-import urllib2
-import time
 import os
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
+
+import urllib
+import urllib2
+import time
+import requests
+import urllib
+import chardet
+import gevent
+from copy import deepcopy
+from random import randint
 
 G_CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -13,13 +20,7 @@ G_BASE_DIR = os.path.dirname(G_CURRENT_DIR)
 
 G_OUTPUT_DIR = os.path.join(G_BASE_DIR, 'output')
 
-import requests
 
-import urllib
-import chardet
-import gevent
-from copy import deepcopy
-from random import randint
 
 
 g_ua_list = [

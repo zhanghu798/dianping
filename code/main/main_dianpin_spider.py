@@ -1,8 +1,5 @@
 #coding=utf8
-
 import os
-
-
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -11,14 +8,11 @@ from datetime import datetime
 import pandas as pd
 import gevent
 from gevent import monkey; monkey.patch_all()
-
 from random import randint
 
 G_CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 G_CODE_DIR = os.path.dirname(G_CURRENT_DIR)
 G_ROOT_DIR = os.path.dirname(G_CODE_DIR)
-
-
 G_LOG_DIR = os.path.join(G_ROOT_DIR, 'log')
 G_OUT_DIR = os.path.join(G_ROOT_DIR, 'out')
 
@@ -26,17 +20,8 @@ G_OUT_DIR = os.path.join(G_ROOT_DIR, 'out')
 for dir in [G_LOG_DIR, G_OUT_DIR]:
     if not os.path.exists(dir):
         os.mkdir(dir)
-#         print 'not dir is exists =@@%s@@' % dir
-#
-#     else:
-#         print 'dir is exists =@@%s@@' % dir
-#
-# raw_input('key...')
-
-# sys.path.append(G_ROOT_DIR)
 sys.path.append(os.path.join(G_CODE_DIR, 'public'))
 sys.path.append(os.path.join(G_CODE_DIR, 'parser'))
-
 
 try:
     from ..public.logger import get_logger
@@ -54,8 +39,6 @@ try:
     from ..parser.info_field import (
         search_condition_class,
         sta_ifno_class)
-
-
 
 except Exception as e:
     from logger import get_logger
@@ -77,43 +60,29 @@ def test_spider():
     logger = get_logger(G_LOG_DIR, 'test.log')
     logger.info('strart...')
 
-
-
     session = get_session(host='www.dianping.com', is_use_abuyun_proxy=True)
-
     # logger.info(session.headers)
-
     url = 'https://www.dianping.com'
-
     res, status_code = download_use_session(session=session, url=url, try_count=6, logger=logger)
 
     url = 'https://www.dianping.com/search/category/2/10/g110'
-
     logger.info('url=@@%s@@' % url)
-
     res, status_code = download_use_session(session=session, url=url, try_count=6, logger=logger)
-
     if res == None:
         logger.error("res=None")
         return None
 
-
     parse_shop_list(buf=res.content, logger=logger)
-
     logger.info('end')
 
 
 def get_search_condition(search_url, city, project, logger, province=''):
     logger.info('strart...')
-
-
     mysql_handle = mysql_class(db='dianping')
     session = get_session(is_use_abuyun_proxy=True, is_use_proxy=False)
-
     url = 'https://www.dianping.com'
     res, status_code = download_use_session(session=session, url=url,try_count=6, logger=logger)
     logger.info(res)
-
     res, status_code = download_use_session(session=session, url=search_url,try_count=6, logger=logger)
 
     if res == None:
@@ -121,41 +90,19 @@ def get_search_condition(search_url, city, project, logger, province=''):
         return None
 
     cat_list_list = parse_cat_condition_list(buf=res.content, logger=logger)
-
     for cat_href, cat in cat_list_list:
-
-        # logger.info('\n\n' + ('*'* 100))
         cat_href = 'https://www.dianping.com' + cat_href
-
-        # if cat == u'不限':
-        #     continue
-
-        # logger.info('@@%s@@%s@@' % (cat_href, cat))
-
         res, status_code = download_use_session(session=session, url=cat_href, try_count=6, logger=logger)
 
         if res == None:
             logger.error("res=None")
             continue
 
-        # logger.info('')
-
         area_list_list = parse_area_condition_list(buf=res.content, logger=logger)
 
         for area_href, area in area_list_list:
             area_href = 'https://www.dianping.com' + area_href
-
-            # if area == u'不限':
-            #     continue
-
-
-            # logger.info('\n\n' + ('#' * 100))
-            # logger.info('@@%s@@%s@@' % (area_href, area))
-
-
-
             res, status_code = download_use_session(session=session, url=area_href,try_count=6, logger=logger)
-
             if res == None:
                 logger.error("res=None")
                 continue
@@ -164,14 +111,6 @@ def get_search_condition(search_url, city, project, logger, province=''):
             for busi_area_href, busi_area in busi_area_list_list:
                 busi_area_href = 'https://www.dianping.com' + busi_area_href
                 # logger.info('@@%s@@%s@@' % (busi_area_href, busi_area))
-
-                # logger.info('*'*100)
-                # logger.info('city=@@%s@@' % city)
-                # logger.info('project=@@%s@@' % project)
-                # logger.info('cat=@@%s@@' % cat)
-                # logger.info('area=@@%s@@' % area)
-                # logger.info('busi_area=@@%s@@' % busi_area)
-                # logger.info('url=@@%s@@' % busi_area_href)
 
                 search_condition_info_handle = search_condition_class()
 
@@ -186,58 +125,12 @@ def get_search_condition(search_url, city, project, logger, province=''):
 
                 search_condition_info_handle.search_url = busi_area_href
 
-                # search_condition_info_handle.display()
-
-                # logger.info('key...')
-                # raw_input('key...')
-
                 res = search_condition_info_handle.storn_search_conditon(
                     mysql_handle=mysql_handle,
                     logger=logger
                 )
 
                 logger.info('res=%d' % res)
-
-
-                # #
-    # with open(os.path.join(G_OUT_DIR, 'search.hmtl'), 'w') as f:
-    #     f.write(res.content)
-    # cat_list_list, region_list_list = parser_search_condition_list(buf=res.content, logger=logger)
-
-    #
-    # logger.info('*'*100 + u'类别')
-    # for cat_list in cat_list_list:
-    #     logger.info('@@%s@@%s@@' % (cat_list[0], cat_list[1]))
-    #
-    #
-    # logger.info('*'*100 + u'类别')
-    #
-    # for cat_list in region_list_list:
-    #     logger.info('@@%s@@%s@@' % (cat_list[0], cat_list[1]))
-    #
-    # for href, area in region_list_list:
-    #     href = 'https://www.dianping.com' + href
-    #
-    #     logger.info('area=@@%s@@, href=@@%s@@' % (area, href))
-    #
-    #     res, status_code = download_use_session(session=session, url=href, logger=logger)
-    #
-    #     if res != None:
-    #         with open(os.path.join(G_OUT_DIR, '%s.html' % area), 'w') as f:
-    #             f.write(res.content)
-    #
-    #
-    #     busi_list = parser_busi_area_list(buf=res.content, logger=logger)
-    #
-    #     for href, busi_area in busi_list:
-    #         href = 'https://www.dianping.com' + href
-    #
-    #         logger.info('busi_area=@@%s@@, href=@@%s@@' % (busi_area, href))
-    #
-    #
-    #
-    # logger.info('end')
-
 
 def get_detail_page(session, detail_page_url,  logger, shop_info_handle):
     res, status = session.get(detail_page_url)
@@ -254,11 +147,6 @@ def get_one_search_page(session, search_url, mysql_handle, logger, project, cate
     shop_info_handle_list, is_next = parse_shop_list(content, logger)
 
     gevent.sleep(randint(0, 3))
-
-    # print '\n\n'
-    # logger.info('')
-    # print '*'*100
-
     # logger.info('len(shop_info_handle_list)=%d' % len(shop_info_handle_list))
 
     shop_count = 0
@@ -290,7 +178,6 @@ def get_one_search_page(session, search_url, mysql_handle, logger, project, cate
             if info_dict == None:
                 logger.error('parse last comment page is failue')
                 gevent.sleep(randint(0, 3))
-
                 continue
 
             for key in info_dict:
@@ -305,18 +192,10 @@ def get_one_search_page(session, search_url, mysql_handle, logger, project, cate
 
         gevent.sleep(randint(0, 3))
 
-        # print '\n'
-        # print '#'*100
-        # shop_info_handle.display()
-
 
         shop_count += 1
         shop_info_handle.download_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
         shop_info_handle.storn(mysql_handle=mysql_handle, logger=logger)
-
-        # logger.info('raw')
-        # raw_input('key...')
 
     return is_next, shop_count
 
@@ -358,21 +237,14 @@ def main_get_shop_info(process_count, unlimited):
             gevent.spawn(get_shop_info, process_num, per_task_count, unlimited)
         )
 
-
     gevent.joinall(event_spawn_list)
-
-
-
-
 
 def get_shop_info(spider_num, task_count=-1, unlimited=None):
     logger = get_logger(
         log_file=os.path.join(G_LOG_DIR, 'search_page_%d.log' % spider_num),
         log_name='event_%d' % spider_num)
     gevent.sleep(spider_num*15-spider_num)
-
     mysql_handle = mysql_class(db='dianping')
-
     if unlimited:
         sql = """
             select
@@ -412,7 +284,6 @@ def get_shop_info(spider_num, task_count=-1, unlimited=None):
 
 
     search_condition_df = pd.read_sql(sql=sql, con=mysql_handle.conn)
-
     for i in range(search_condition_df.shape[0]):
         data_series = search_condition_df.iloc[i, :]
         search_record_id = data_series.id
@@ -423,7 +294,6 @@ def get_shop_info(spider_num, task_count=-1, unlimited=None):
         area = data_series.area
         busi_area = data_series.busi_area
         search_url = data_series.search_url
-
 
         logger.info('*'*100)
         logger.info('search_id=%d, search_url=@@%s@@' % (search_record_id, search_url))
@@ -452,25 +322,12 @@ def get_shop_info(spider_num, task_count=-1, unlimited=None):
                                 busi_area=busi_area,
                                 city=city)
 
-
-            # logger.info(is_next)
-
-            # logger.info('raw_input')
-            # raw_input('key...'
-            #           '')
-
             all_shop_count += shop_count
-
             if not is_next:
                 break
-
-
         gevent.sleep(0)
 
-
-
         # 设置该搜索条件已经搜索到的店铺个数
-
         logger.info('downloaded_shop_count=%d' % all_shop_count)
 
         sql = 'update tbl_search_condition set downloaded_shop_count = %d where id = %d' % \

@@ -8,7 +8,6 @@ sys.setdefaultencoding("utf-8")
 
 import logging
 
-
 def get_logger(log_file, log_name='', display=True):
     if log_name != '':
         formatter = logging.Formatter('%(name)s==>%(levelname)s:%(asctime)-15s; %(filename)s %(funcName)s %(lineno)d; %(message)s')
@@ -33,9 +32,6 @@ def get_logger(log_file, log_name='', display=True):
         ch.setFormatter(formatter)
         logger.addHandler(ch)
 
-
-    # logger.setLevel('NOTSET')
-    # print "id(logger)= %d" % id(logger)
     return logger
 
 
